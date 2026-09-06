@@ -50,7 +50,7 @@ class CommandDao(private val dbHelper: DbHelper) {
     }
 
     fun findByCommand(command: String): CommandRow? =
-        query("$columns FROM commands WHERE command = ? LIMIT 1", command)
+        query("$columns FROM commands WHERE command = ? LIMIT 1", command).firstOrNull()
 
     private fun toValues(row: CommandRow): ContentValues {
         val cv = ContentValues()

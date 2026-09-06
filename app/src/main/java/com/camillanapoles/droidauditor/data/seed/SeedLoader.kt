@@ -9,7 +9,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
- * Seeds commands, settings and relation_types from assets/seed/*.json on first launch.
+ * Seeds commands, settings and relation_types from the seed JSON assets on first launch.
  * Everything configurable lives in the DB; the Kotlin code contains no catalog.
  */
 class SeedLoader(private val context: Context, private val dbHelper: DbHelper) {
