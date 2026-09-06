@@ -1,0 +1,6 @@
+{
+  "idle_days_threshold": "30",
+  "min_cache_mb": "100",
+  "usage_lookback_days": "30",
+  "max_logcat_lines": "5000"
+}

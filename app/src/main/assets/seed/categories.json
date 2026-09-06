@@ -1,0 +1,70 @@
+[
+  {
+    "name": "USB/ADB/Boot",
+    "description": "USB, ADB and boot-chain forensic scripts"
+  },
+  {
+    "name": "Properties/Partitions",
+    "description": "System properties, partitions and vendor customization scripts"
+  },
+  {
+    "name": "Root/Privilege",
+    "description": "Root indicators, privileges, capabilities and privesc surface scripts"
+  },
+  {
+    "name": "SELinux/Kernel",
+    "description": "SELinux policy, kernel and debug interface scripts"
+  },
+  {
+    "name": "Namespaces/Tasks",
+    "description": "Namespaces, scheduled tasks and job scripts"
+  },
+  {
+    "name": "FileSystem/Perms",
+    "description": "Filesystem, device nodes and special permission scripts"
+  },
+  {
+    "name": "Network/IPC",
+    "description": "Network, binder, sockets and IPC scripts"
+  },
+  {
+    "name": "Hardware/TEE",
+    "description": "Hardware interfaces, TEE and input device scripts"
+  },
+  {
+    "name": "App Security",
+    "description": "App attack surface, providers and receivers scripts"
+  },
+  {
+    "name": "Crypto/Secrets",
+    "description": "Crypto surface, certificates and secrets scan scripts"
+  },
+  {
+    "name": "Forensic",
+    "description": "Forensic collection, snapshots and report packaging scripts"
+  },
+  {
+    "name": "Device Config",
+    "description": "On-device configuration commands (AdbCommands-derived, adb-free)"
+  },
+  {
+    "name": "Device Info",
+    "description": "On-device info commands (AdbCommands-derived, adb-free)"
+  },
+  {
+    "name": "Termux Maintenance",
+    "description": "Termux cache/package inspection and maintenance commands"
+  },
+  {
+    "name": "Internal Collectors",
+    "description": "Built-in relational collectors (Kotlin, not shell)"
+  },
+  {
+    "name": "Host Reference",
+    "description": "Host-only adb/fastboot commands kept for reference (disabled)"
+  },
+  {
+    "name": "Optimizer Actions",
+    "description": "Optimization actions (some destructive, confirmation required)"
+  }
+]

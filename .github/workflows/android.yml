@@ -1,0 +1,43 @@
+name: Build APK
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: temurin
+
+      - uses: gradle/actions/setup-gradle@v3
+
+      - run: chmod +x gradlew && ./gradlew assembleDebug assembleRelease --stacktrace --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: droid-auditor-apk
+          path: app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: droid-auditor-apk
+          path: apks/
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: apks/**/*.apk
+          generate_release_notes: true

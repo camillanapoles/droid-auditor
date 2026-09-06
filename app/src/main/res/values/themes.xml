@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Compose Material3 handles day/night colors; this XML theme only needs to be
+         a NoActionBar base that follows the system day/night mode. -->
+    <style name="Theme.DroidAuditor" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+</resources>

@@ -1,0 +1,52 @@
+[
+  {
+    "name": "runs_as",
+    "forward_label": "runs as",
+    "reverse_label": "is run by"
+  },
+  {
+    "name": "spawned",
+    "forward_label": "spawned",
+    "reverse_label": "was spawned by"
+  },
+  {
+    "name": "binds_to",
+    "forward_label": "binds to",
+    "reverse_label": "is bound by"
+  },
+  {
+    "name": "launched",
+    "forward_label": "launched",
+    "reverse_label": "was launched by"
+  },
+  {
+    "name": "uses_permission",
+    "forward_label": "uses permission",
+    "reverse_label": "is granted to"
+  },
+  {
+    "name": "listens_on",
+    "forward_label": "listens on",
+    "reverse_label": "is listened on by"
+  },
+  {
+    "name": "provides",
+    "forward_label": "provides",
+    "reverse_label": "is provided by"
+  },
+  {
+    "name": "receives",
+    "forward_label": "receives",
+    "reverse_label": "is received by"
+  },
+  {
+    "name": "installs",
+    "forward_label": "installed by",
+    "reverse_label": "installed"
+  },
+  {
+    "name": "calls",
+    "forward_label": "calls",
+    "reverse_label": "is called by"
+  }
+]

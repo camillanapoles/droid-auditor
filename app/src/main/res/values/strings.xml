@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Droid Auditor</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_audit">Audit</string>
+    <string name="nav_explorer">Explorer</string>
+    <string name="nav_timeline">Timeline</string>
+    <string name="nav_optimize">Optimize</string>
+    <string name="nav_commands">Commands</string>
+
+    <!-- Common -->
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="close">Close</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="confirm">Confirm</string>
+    <string name="refresh">Refresh</string>
+    <string name="empty_list">Nothing here yet.</string>
+    <string name="enabled_flag">enabled</string>
+    <string name="disabled_flag">disabled</string>
+    <string name="requires_root_flag">root</string>
+    <string name="danger_flag">danger</string>
+    <string name="system_flag">system</string>
+
+    <!-- Dashboard -->
+    <string name="root_status">Root access</string>
+    <string name="root_granted">granted</string>
+    <string name="root_denied">denied</string>
+    <string name="recheck">Recheck</string>
+    <string name="usage_status">Usage stats access</string>
+    <string name="usage_granted">granted</string>
+    <string name="grant_usage">Grant access</string>
+    <string name="device_info">Device</string>
+    <string name="model_label">Model</string>
+    <string name="version_label">Android</string>
+    <string name="fingerprint_label">Build fingerprint</string>
+    <string name="storage_title">Storage (app data partition)</string>
+    <string name="ram_title">Memory</string>
+    <string name="stat_total">Total</string>
+    <string name="stat_avail">Available</string>
+    <string name="ram_total">Total</string>
+    <string name="ram_avail">Available</string>
+    <string name="last_run">Last audit</string>
+    <string name="last_run_none">No audit yet</string>
+    <string name="full_audit">Full audit</string>
+    <string name="cancel_audit">Cancel audit</string>
+    <string name="audit_running">Audit running…</string>
+    <string name="started_label">Started</string>
+    <string name="scripts_ok_label">Commands OK</string>
+    <string name="scripts_fail_label">Commands failed</string>
+    <string name="findings_label">Findings</string>
+
+    <!-- Audit -->
+    <string name="tab_progress">Progress</string>
+    <string name="tab_outputs">Outputs</string>
+    <string name="tab_findings">Findings</string>
+    <string name="phase_collect">Collecting</string>
+    <string name="phase_parse">Parsing findings</string>
+    <string name="phase_correlate">Correlating</string>
+    <string name="phase_optimize">Optimizing</string>
+    <string name="phase_done">Done</string>
+    <string name="phase_cancelled">Cancelled</string>
+    <string name="status_pending">pending</string>
+    <string name="status_running">running</string>
+    <string name="status_ok">ok</string>
+    <string name="status_fail">fail</string>
+    <string name="status_skip">skipped</string>
+    <string name="no_outputs">No outputs recorded.</string>
+    <string name="lines_label">lines</string>
+    <string name="exit_code_label">exit</string>
+    <string name="duration_label">ms</string>
+    <string name="severity_all">ALL</string>
+    <string name="no_findings">No findings.</string>
+    <string name="audit_idle_hint">Run a full audit from the Dashboard first.</string>
+
+    <!-- Explorer -->
+    <string name="tab_packages">Packages</string>
+    <string name="tab_processes">Processes</string>
+    <string name="tab_services">Services</string>
+    <string name="search_packages">Search packages…</string>
+    <string name="filter_system">System apps</string>
+    <string name="pkg_version">version</string>
+    <string name="pkg_uid">uid</string>
+    <string name="pkg_installed">installed</string>
+    <string name="pkg_updated">updated</string>
+    <string name="pkg_installer">installer</string>
+    <string name="pkg_target_sdk">target SDK</string>
+    <string name="pkg_perms">permissions</string>
+    <string name="pkg_apk">APK</string>
+    <string name="detail_permissions">Permissions</string>
+    <string name="detail_processes">Processes</string>
+    <string name="detail_services">Services</string>
+    <string name="detail_activities">Activities</string>
+    <string name="detail_edges">Relationships</string>
+    <string name="detail_usage">Last usage</string>
+    <string name="usage_unknown">unknown</string>
+    <string name="edges_out">outgoing</string>
+    <string name="edges_in">incoming</string>
+    <string name="proc_pid">pid</string>
+    <string name="proc_rss">RSS</string>
+    <string name="proc_uid">uid</string>
+    <string name="proc_oom">oom adj</string>
+    <string name="proc_state">state</string>
+    <string name="proc_cached">cached</string>
+    <string name="proc_has_services">services</string>
+    <string name="proc_has_fg">foreground</string>
+    <string name="unknown_value">unknown</string>
+
+    <!-- Timeline -->
+    <string name="install_order">Install order (ordem de surgimento)</string>
+    <string name="launch_graph">Launch graph (quem chamou quem)</string>
+    <string name="installed_by">installed by</string>
+    <string name="unknown_installer">unknown</string>
+    <string name="no_timeline">No install timeline recorded.</string>
+    <string name="no_launches">No launch events recorded.</string>
+
+    <!-- Optimize -->
+    <string name="suggestions">Suggestions</string>
+    <string name="idle_section">Running but idle (running sem execução)</string>
+    <string name="action_clear_cache">Clear cache</string>
+    <string name="action_force_stop">Force stop</string>
+    <string name="action_termux_clean">Clean Termux caches</string>
+    <string name="action_trim_caches">Trim system caches</string>
+    <string name="confirm_title">Confirm action</string>
+    <string name="confirm_danger">This is a destructive action. Continue?</string>
+    <string name="action_result">Action result</string>
+    <string name="termux_cache_size">Termux cache size</string>
+    <string name="no_suggestions">No optimization suggestions.</string>
+
+    <!-- Commands -->
+    <string name="commands_title">Commands</string>
+    <string name="add_command">Add command</string>
+    <string name="edit_command">Edit command</string>
+    <string name="field_name">Name</string>
+    <string name="field_category">Category</string>
+    <string name="field_command">Command</string>
+    <string name="field_parser">Parser</string>
+    <string name="field_description">Description</string>
+    <string name="flag_requires_root">requires root</string>
+    <string name="kind_script">script</string>
+    <string name="kind_shell">shell</string>
+    <string name="kind_collector">collector</string>
+    <string name="hint_placeholders">&lt;outdir&gt; is replaced by the run directory, &lt;pkg&gt; by the selected package</string>
+    <string name="kind_action">action</string>
+    <string name="delete_confirm">Delete this command?</string>
+    <string name="run_finished">Command finished (exit %1$d)</string>
+    <string name="run_now_label">Run now</string>
+    <string name="no_commands">No commands.</string>
+    <string name="bad_input">Fill name, category and command.</string>
+
+    <!-- Output viewer -->
+    <string name="output_not_found">Output file not found.</string>
+    <string name="truncated_note">Display truncated to first %1$d lines</string>
+</resources>
