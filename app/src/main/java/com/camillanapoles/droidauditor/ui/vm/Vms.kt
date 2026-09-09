@@ -153,6 +153,7 @@ class ExplorerViewModel(private val c: AppContainer) : ViewModel() {
         val services: List<ServiceRow>,
         val activities: List<ActivityRow>,
         val edges: List<EdgeDisplay>,
+        val usedBy: List<com.camillanapoles.droidauditor.domain.UsedByNode>,
         val lastUsage: Long?
     )
 
@@ -221,6 +222,7 @@ class ExplorerViewModel(private val c: AppContainer) : ViewModel() {
                 services = c.dataDao.servicesForPackage(runId, pkg),
                 activities = c.dataDao.activitiesForPackage(runId, pkg),
                 edges = c.graphDao.edgesForEntity(runId, pkg),
+                usedBy = c.graphDao.usedByTree(runId, pkg),
                 lastUsage = c.dataDao.lastUsageForPackage(runId, pkg)
             )
         }

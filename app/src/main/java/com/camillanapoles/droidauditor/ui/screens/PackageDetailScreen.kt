@@ -1,5 +1,5 @@
 package com.camillanapoles.droidauditor.ui.screens
-
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,7 +46,8 @@ fun PackageDetailScreen(
     container: AppContainer,
     runId: Long,
     pkg: String,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onOpenPackage: (Long, String) -> Unit = { _, _ -> }
 ) {
     val vm: ExplorerViewModel = viewModel(factory = remember { VmFactory(container) })
     val detail by vm.detail.collectAsState()
@@ -182,7 +183,59 @@ fun PackageDetailScreen(
                         }
                     }
                 }
+                item {
+                    SectionTitle(text = stringResource(R.string.detail_used_by))
+                }
+                if (d.usedBy.isEmpty()) {
+                    item { Text(stringResource(R.string.used_by_empty), style = MaterialTheme.typography.bodySmall) }
+                }
+                d.usedBy.forEach { node ->
+                    item(key = "ub_${node.ekey}") {
+                        UsedByTree(
+                            node = node,
+                            depth = 0,
+                            runId = runId,
+                            onOpenPackage = onOpenPackage
+                        )
+                    }
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun UsedByTree(
+    node: com.camillanapoles.droidauditor.domain.UsedByNode,
+    depth: Int,
+    runId: Long,
+    onOpenPackage: (Long, String) -> Unit
+) {
+    Column(modifier = Modifier.padding(start = (depth * 16).dp, top = 2.dp, bottom = 2.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onOpenPackage(runId, node.ekey) }
+        ) {
+            Text(
+                text = "└ " + node.relationLabel + ":",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = node.elabel.ifBlank { node.ekey },
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            if (node.truncated) {
+                Badge(text = stringResource(R.string.used_by_repeated), color = InfoBlue)
+            }
+        }
+        node.children.forEach { child ->
+            UsedByTree(node = child, depth = depth + 1, runId = runId, onOpenPackage = onOpenPackage)
         }
     }
 }

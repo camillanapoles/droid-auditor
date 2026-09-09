@@ -137,6 +137,11 @@
     <string name="crash_cause_label">Causa:</string>
     <string name="crash_fix_label">Solução:</string>
 
+    <!-- Used-by tree -->
+    <string name="detail_used_by">Utilizado por (árvore)</string>
+    <string name="used_by_empty">Nenhum app utiliza isto (folha da topologia).</string>
+    <string name="used_by_repeated">já listado</string>
+
     <string name="proc_pid">pid</string>
     <string name="proc_rss">RSS</string>
     <string name="proc_uid">uid</string>

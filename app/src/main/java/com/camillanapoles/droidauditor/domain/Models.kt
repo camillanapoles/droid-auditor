@@ -146,6 +146,16 @@ data class PkgCount(val packageName: String, val count: Int)
 
 data class IdleCandidate(val packageName: String, val lastUpdateTime: Long)
 
+/** Node of the reverse dependency tree ("quem utiliza"). */
+data class UsedByNode(
+    val ekey: String,
+    val etype: String,
+    val elabel: String,
+    val relationLabel: String,
+    val children: List<UsedByNode>,
+    val truncated: Boolean   // reference collapsed because node already expanded
+)
+
 /** Diagnosed crash/ANR event with a resolutive action. */
 data class CrashEventRow(
     val ts: Long,
