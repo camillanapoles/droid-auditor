@@ -156,6 +156,20 @@ data class UsedByNode(
     val truncated: Boolean   // reference collapsed because node already expanded
 )
 
+/** Diagnosed crash/ANR event with a resolutive action. */
+data class CrashEventRow(
+    val ts: Long,
+    val packageName: String,
+    val kind: String,            // CRASH | ANR
+    val summary: String,
+    val diagnosisTitle: String,
+    val cause: String,
+    val resolution: String,
+    val command: String?,        // executable template (<pkg>), null = manual only
+    val requiresRoot: Boolean,
+    val rawPath: String?
+)
+
 /** Row of overlay_state: per-app overlay permission + active overlay windows. */
 data class OverlayStateRow(
     val packageName: String,

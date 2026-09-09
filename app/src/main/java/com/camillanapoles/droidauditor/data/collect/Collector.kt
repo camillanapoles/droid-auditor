@@ -15,6 +15,7 @@ object CollectorIds {
     const val USAGE = "usage_stats"
     const val STORAGE = "storage_caches"
     const val TERMUX = "termux_storage"
+    const val CRASH_DIAGNOSIS = "crash_diagnosis"
     const val OVERLAY_STATE = "overlay_state"
 }
 
