@@ -213,7 +213,7 @@ private fun CategoryHeader(
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-        )
+        }
         Badge(
             text = stringResource(R.string.topo_impact) + " " + category.maxImpact,
             color = impactColor(category.maxImpact)
