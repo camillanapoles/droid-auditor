@@ -10,13 +10,13 @@ class CommandDao(private val dbHelper: DbHelper) {
     private val columns = "id, name, category, kind, command, requires_root, parser, enabled, danger, description, source, updated_at"
 
     fun listAll(): List<CommandRow> =
-        query("$columns FROM commands ORDER BY category, name")
+        query("SELECT $columns FROM commands ORDER BY category, name")
 
     fun listEnabled(): List<CommandRow> =
-        query("$columns FROM commands WHERE enabled = 1 ORDER BY id")
+        query("SELECT $columns FROM commands WHERE enabled = 1 ORDER BY id")
 
     fun byId(id: Long): CommandRow? =
-        query("$columns FROM commands WHERE id = ?", id.toString()).firstOrNull()
+        query("SELECT $columns FROM commands WHERE id = ?", id.toString()).firstOrNull()
 
     fun categories(): List<String> {
         val out = ArrayList<String>()
@@ -50,7 +50,7 @@ class CommandDao(private val dbHelper: DbHelper) {
     }
 
     fun findByCommand(command: String): CommandRow? =
-        query("$columns FROM commands WHERE command = ? LIMIT 1", command).firstOrNull()
+        query("SELECT $columns FROM commands WHERE command = ? LIMIT 1", command).firstOrNull()
 
     private fun toValues(row: CommandRow): ContentValues {
         val cv = ContentValues()
