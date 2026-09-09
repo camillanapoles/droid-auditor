@@ -15,6 +15,7 @@ object CollectorIds {
     const val USAGE = "usage_stats"
     const val STORAGE = "storage_caches"
     const val TERMUX = "termux_storage"
+    const val OVERLAY_STATE = "overlay_state"
 }
 
 /** A built-in Kotlin collector invoked by the audit engine. */

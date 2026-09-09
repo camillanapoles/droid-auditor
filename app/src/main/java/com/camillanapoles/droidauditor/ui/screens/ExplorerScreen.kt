@@ -63,7 +63,8 @@ fun ExplorerScreen(container: AppContainer, onOpenPackage: (Long, String) -> Uni
             stringResource(R.string.tab_processes),
             stringResource(R.string.tab_services),
             stringResource(R.string.tab_topology),
-            stringResource(R.string.tab_findings)
+            stringResource(R.string.tab_findings),
+            stringResource(R.string.tab_overlay)
         )
         TabRow(selectedTabIndex = tab) {
             tabs.forEachIndexed { index, title ->
@@ -81,6 +82,7 @@ fun ExplorerScreen(container: AppContainer, onOpenPackage: (Long, String) -> Uni
             2 -> ServicesTab(services)
             3 -> TopologyTab(container, onOpenPackage)
             4 -> FindingsTab(findings, onOpenPackage)
+            5 -> OverlayTab(container, onOpenPackage)
         }
     }
 }

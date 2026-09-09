@@ -101,6 +101,15 @@
     <string name="edges_out">outgoing</string>
     <string name="edges_in">incoming</string>
 
+    <!-- Overlay -->
+    <string name="tab_overlay">Sobreposição</string>
+    <string name="overlay_summary">%1$d com permissão · %2$d com janela ativa agora</string>
+    <string name="overlay_rescan">Reverificar</string>
+    <string name="overlay_none">Nenhum app com sobreposição. Rode um audit ou reverifique.</string>
+    <string name="overlay_active_badge">ATIVA (%1$d)</string>
+    <string name="overlay_allowed_badge">permitida</string>
+    <string name="overlay_action_revoke">Revogar</string>
+    <string name="overlay_revoke_confirm">Revogar a permissão de sobreposição de %1$s? O app para de poder desenhar sobre outros apps.</string>
     <!-- Topology -->
     <string name="tab_topology">Topologia</string>
     <string name="topo_sort_impact">Impacto</string>

@@ -418,6 +418,50 @@ class DataDao(private val dbHelper: DbHelper) {
         return 0L
     }
 
+    /** Replaces the overlay_state rows of one run in a single transaction. */
+    fun replaceOverlayStates(
+        runId: Long,
+        rows: List<com.camillanapoles.droidauditor.domain.OverlayStateRow>
+    ) {
+        inTx { db ->
+            db.delete("overlay_state", "run_id = ?", arrayOf(runId.toString()))
+            for (row in rows) {
+                val cv = ContentValues()
+                cv.put("run_id", runId)
+                cv.put("package_name", row.packageName)
+                cv.put("overlay_allowed", if (row.overlayAllowed) 1 else 0)
+                cv.put("appops_mode", row.appopsMode)
+                cv.put("active_windows", row.activeWindows)
+                cv.put("is_system", if (row.isSystem) 1 else 0)
+                db.insertWithOnConflict("overlay_state", null, cv, SQLiteDatabase.CONFLICT_REPLACE)
+            }
+        }
+    }
+
+    /** Overlay rows of a run: allowed/active first, system last. */
+    fun overlayRowsFor(runId: Long, limit: Int = 500): List<com.camillanapoles.droidauditor.domain.OverlayStateRow> {
+        val out = ArrayList<com.camillanapoles.droidauditor.domain.OverlayStateRow>()
+        dbHelper.readableDatabase.rawQuery(
+            "SELECT package_name, overlay_allowed, appops_mode, active_windows, is_system " +
+                "FROM overlay_state WHERE run_id = ? " +
+                "ORDER BY active_windows DESC, overlay_allowed DESC, package_name LIMIT $limit",
+            arrayOf(runId.toString())
+        ).use { c ->
+            while (c.moveToNext()) {
+                out.add(
+                    com.camillanapoles.droidauditor.domain.OverlayStateRow(
+                        packageName = c.getString(0) ?: continue,
+                        overlayAllowed = c.getInt(1) != 0,
+                        appopsMode = c.getString(2) ?: "",
+                        activeWindows = c.getInt(3),
+                        isSystem = c.getInt(4) != 0
+                    )
+                )
+            }
+        }
+        return out
+    }
+
     /** Non-system packages with a live process, no resumed activity and no services. */
     fun runningIdleCandidates(runId: Long): List<IdleCandidate> {
         val out = ArrayList<IdleCandidate>()
