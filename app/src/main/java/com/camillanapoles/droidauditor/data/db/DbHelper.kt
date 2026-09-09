@@ -22,11 +22,14 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_V
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // v1 -> v2 keeps collected data: crash_events is added with IF NOT EXISTS.
+        // v1 -> v2 keeps collected data: crash_events + overlay_state added with IF NOT EXISTS.
+        // v1 -> v2 keeps collected data: new tables/indexes are created with
+        // IF NOT EXISTS so existing installs only gain the overlay_state table.
         for (statement in DDL) {
             db.execSQL(
                 statement
                     .replaceFirst("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ")
+                    .replaceFirst("CREATE UNIQUE INDEX ", "CREATE UNIQUE INDEX IF NOT EXISTS ")
                     .replaceFirst("CREATE INDEX ", "CREATE INDEX IF NOT EXISTS ")
             )
         }
@@ -36,11 +39,12 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_V
     companion object {
         const val DB_NAME = "droidauditor.db"
         const val DB_VERSION = 2
+
         val ALL_TABLES = listOf(
             "settings", "commands", "audit_runs", "script_outputs", "packages",
             "permissions", "processes", "services", "activities", "launch_events",
             "install_timeline", "usage_events", "storage_entries", "findings",
-            "entities", "edges", "relation_types", "crash_events"
+            "entities", "edges", "relation_types", "crash_events", "overlay_state"
         )
 
         private val DDL: List<String> = listOf(
@@ -231,6 +235,18 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_V
                 "raw_path TEXT)",
             "CREATE INDEX idx_crash_run ON crash_events(run_id)",
             "CREATE INDEX idx_crash_pkg ON crash_events(package_name)"
+            "CREATE INDEX idx_edges_relation ON edges(relation)",
+            "CREATE TABLE overlay_state (" +
+                "run_id INTEGER, " +
+                "package_name TEXT, " +
+                "overlay_allowed INTEGER, " +
+                "appops_mode TEXT, " +
+                "active_windows INTEGER DEFAULT 0, " +
+                "is_system INTEGER DEFAULT 0, " +
+                "PRIMARY KEY(run_id, package_name))",
+            "CREATE INDEX idx_overlay_run ON overlay_state(run_id)",
+            "CREATE INDEX idx_overlay_pkg ON overlay_state(package_name)",
+            "CREATE UNIQUE INDEX idx_commands_name ON commands(name)"
         )
     }
 }

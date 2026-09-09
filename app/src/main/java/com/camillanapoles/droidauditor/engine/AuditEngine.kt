@@ -7,6 +7,7 @@ import com.camillanapoles.droidauditor.data.collect.FocusCollector
 import com.camillanapoles.droidauditor.data.collect.LaunchGraphCollector
 import com.camillanapoles.droidauditor.data.collect.PackageCollector
 import com.camillanapoles.droidauditor.data.collect.CrashCollector
+import com.camillanapoles.droidauditor.data.collect.OverlayCollector
 import com.camillanapoles.droidauditor.data.collect.PermissionCollector
 import com.camillanapoles.droidauditor.data.collect.ProcessCollector
 import com.camillanapoles.droidauditor.data.collect.ServiceCollector
@@ -60,6 +61,7 @@ class AuditEngine(private val container: AppContainer) {
         StorageCachesCollector(container.rootAccess, container.shellExec, container.dataDao, container.findingsDao),
         TermuxStorageCollector(container.rootAccess, container.shellExec, container.dataDao),
         CrashCollector(container.shellExec, container.rootAccess, container.dataDao, container.findingsDao)
+        OverlayCollector(context, container.shellExec, container.rootAccess, container.dataDao, container.findingsDao)
     ).associateBy { it.id }
 
     val isRunning: Boolean

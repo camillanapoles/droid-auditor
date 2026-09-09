@@ -1138,5 +1138,23 @@
     "kind": "collector",
     "command": "crash_diagnosis",
     "description": "Crash/ANR events (logcat crash+events buffers) com diagnostico resolutivo"
+  },
+  {
+    "name": "Overlay collector",
+    "category": "Internal Collectors",
+    "kind": "collector",
+    "command": "overlay_state",
+    "description": "Per-app overlay permission (AppOps) + active overlay windows (dumpsys window, root best-effort)"
+  },
+  {
+    "name": "Revoke overlay",
+    "category": "Optimizer Actions",
+    "kind": "action",
+    "command": "appops set <pkg> SYSTEM_ALERT_WINDOW deny",
+    "requires_root": 1,
+    "parser": "raw",
+    "enabled": 1,
+    "danger": 1,
+    "description": "Revoga a permissao de sobreposicao do app selecionado (<pkg>)"
   }
 ]
