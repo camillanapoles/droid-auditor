@@ -64,6 +64,19 @@ drops and recreates all tables (v1 has no migrations to preserve).
    the recent launch graph ("quem chamou quem": `A → B (activity, ts)`).
 6. **Optimize** — suggestions by severity; destructive actions (clear app cache,
    force stop, Termux cache clean, `pm trim-caches`) always require confirmation.
+7. **Explorer → Topologia** — categorical tree: Tipo [Usuário/Sistema] →
+   categoria funcional → apps por prioridade (P0-P5 do oom adj), impacto
+   composto (RSS + cache + permissões perigosas + ociosidade) e ordem de
+   surgimento (install order); filtros e ordenação Impacto/Prioridade/Ordem/A-Z.
+8. **Explorer → Sobreposição** — "qual app está em sobreposição?": permissão
+   AppOps por app (sem root) + janelas overlay ATIVAS via `dumpsys window`
+   (root best-effort) + ação Revogar (`appops set ... deny`).
+9. **Audit → Diagnóstico** — crashes/ANRs (logcat crash+events buffers) com
+   diagnóstico RESOLUTIVO: título + causa + solução + comando executável
+   (Corrigir, danger-gated). Sem root cobre os próprios logs; com
+   `adb shell pm grant <pkg> android.permission.READ_LOGS` cobre todos os apps.
+10. **Package detail → Utilizado por (árvore)** — árvore reversa de dependências
+    (quem usa este app/provider/serviço), nós clicáveis.
 7. **Commands** — full CRUD over the catalog; `kind=shell` rows have *Run now*
    with an output viewer. `<outdir>` and `<pkg>` are substituted at run time.
 
