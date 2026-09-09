@@ -100,6 +100,11 @@
     <string name="usage_unknown">unknown</string>
     <string name="edges_out">outgoing</string>
     <string name="edges_in">incoming</string>
+
+    <!-- Used-by tree -->
+    <string name="detail_used_by">Utilizado por (árvore)</string>
+    <string name="used_by_empty">Nenhum app utiliza isto (folha da topologia).</string>
+    <string name="used_by_repeated">já listado</string>
     <string name="proc_pid">pid</string>
     <string name="proc_rss">RSS</string>
     <string name="proc_uid">uid</string>

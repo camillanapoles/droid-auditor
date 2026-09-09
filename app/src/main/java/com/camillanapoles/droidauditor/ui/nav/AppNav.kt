@@ -134,7 +134,8 @@ fun AppNav(container: AppContainer) {
             ) { entry ->
                 val runId = entry.arguments?.getLong("runId") ?: -1L
                 val pkg = Uri.decode(entry.arguments?.getString("pkg").orEmpty())
-                PackageDetailScreen(container, runId, pkg, onBack = { navController.popBackStack() })
+                PackageDetailScreen(container, runId, pkg, onBack = { navController.popBackStack() },
+                    onOpenPackage = { r, p -> navController.navigate("package/$r/" + Uri.encode(p)) })
             }
         }
     }

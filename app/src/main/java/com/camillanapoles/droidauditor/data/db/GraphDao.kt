@@ -83,6 +83,72 @@ class GraphDao(private val dbHelper: DbHelper) {
         return out
     }
 
+    /**
+     * Reverse dependency tree ("utilizado por"): who depends on [ekey],
+     * recursively. Incoming edges src -> ekey, labels from relation_types
+     * (reverse). Guards: max depth, max nodes, visited-set (no cycles).
+     */
+    fun usedByTree(
+        runId: Long,
+        ekey: String,
+        maxDepth: Int = 5,
+        maxNodes: Int = 200
+    ): List<com.camillanapoles.droidauditor.domain.UsedByNode> {
+        val relations = HashMap<String, RelationType>()
+        for (r in relationTypes()) relations[r.name] = r
+        val visited = HashSet<String>()
+        var budget = maxNodes
+
+        fun expand(key: String, depth: Int): List<com.camillanapoles.droidauditor.domain.UsedByNode> {
+            if (depth <= 0 || budget <= 0) return emptyList()
+            val parents = ArrayList<Pair<String, Array<String>>>()  // relation, [ekey, etype, elabel]
+            dbHelper.readableDatabase.rawQuery(
+                "SELECT e.relation, s.ekey, s.etype, s.elabel " +
+                    "FROM edges e " +
+                    "JOIN entities s ON s.id = e.src " +
+                    "JOIN entities d ON d.id = e.dst " +
+                    "WHERE e.run_id = ? AND s.run_id = ? AND d.run_id = ? AND d.ekey = ? " +
+                    "ORDER BY s.ekey LIMIT 60",
+                arrayOf(runId.toString(), runId.toString(), runId.toString(), key)
+            ).use { c ->
+                while (c.moveToNext()) {
+                    val otherKey = c.getString(1) ?: continue
+                    if (otherKey == key) continue
+                    parents.add(
+                        (c.getString(0) ?: "") to arrayOf(otherKey, c.getString(2) ?: "", c.getString(3) ?: "")
+                    )
+                }
+            }
+            val out = ArrayList<com.camillanapoles.droidauditor.domain.UsedByNode>()
+            for ((relation, fields) in parents) {
+                if (budget <= 0) break
+                if (!visited.add(fields[0])) {
+                    // already expanded elsewhere: leaf reference, no recursion
+                    out.add(
+                        com.camillanapoles.droidauditor.domain.UsedByNode(
+                            ekey = fields[0], etype = fields[1], elabel = fields[2],
+                            relationLabel = relations[relation]?.reverseLabel ?: relation,
+                            children = emptyList(), truncated = true
+                        )
+                    )
+                    continue
+                }
+                budget--
+                out.add(
+                    com.camillanapoles.droidauditor.domain.UsedByNode(
+                        ekey = fields[0], etype = fields[1], elabel = fields[2],
+                        relationLabel = relations[relation]?.reverseLabel ?: relation,
+                        children = expand(fields[0], depth - 1),
+                        truncated = false
+                    )
+                )
+            }
+            return out
+        }
+
+        return expand(ekey, maxDepth)
+    }
+
     fun countEdges(runId: Long): Int {
         dbHelper.readableDatabase.rawQuery(
             "SELECT COUNT(*) FROM edges WHERE run_id = ?", arrayOf(runId.toString())
