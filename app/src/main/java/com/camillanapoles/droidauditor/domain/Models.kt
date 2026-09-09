@@ -154,6 +154,13 @@ data class UsedByNode(
     val relationLabel: String,
     val children: List<UsedByNode>,
     val truncated: Boolean   // reference collapsed because node already expanded
+/** Row of overlay_state: per-app overlay permission + active overlay windows. */
+data class OverlayStateRow(
+    val packageName: String,
+    val overlayAllowed: Boolean,
+    val appopsMode: String,
+    val activeWindows: Int,
+    val isSystem: Boolean
 )
 
 // ─────────── Topology ───────────
