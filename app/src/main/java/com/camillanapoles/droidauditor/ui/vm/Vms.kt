@@ -42,6 +42,7 @@ class VmFactory(private val container: AppContainer) : ViewModelProvider.Factory
         TimelineViewModel::class.java -> TimelineViewModel(container)
         OptimizeViewModel::class.java -> OptimizeViewModel(container)
         CommandsViewModel::class.java -> CommandsViewModel(container)
+        TopologyViewModel::class.java -> TopologyViewModel(container)
         else -> throw IllegalArgumentException("Unknown ViewModel ${modelClass.name}")
     } as T
 }
@@ -397,4 +398,49 @@ class CommandsViewModel(private val c: AppContainer) : ViewModel() {
 
     private fun slug(name: String): String =
         name.lowercase().replace(Regex("[^a-z0-9_-]+"), "_").take(40)
+}
+
+class TopologyViewModel(private val c: AppContainer) : ViewModel() {
+
+    data class UiState(
+        val runId: Long = -1L,
+        val sections: List<com.camillanapoles.droidauditor.domain.TopologyTypeSection> = emptyList(),
+        val sort: com.camillanapoles.droidauditor.domain.TopologySort =
+            com.camillanapoles.droidauditor.domain.TopologySort.IMPACT,
+        val query: String = "",
+        val typeFilter: Int = 0,     // 0 all, 1 user, 2 system
+        val loaded: Boolean = false
+    )
+
+    private val _ui = MutableStateFlow(UiState())
+    val ui: StateFlow<UiState> = _ui
+
+    init {
+        reload()
+    }
+
+    fun reload() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val run = c.runDao.lastRun()
+            val rid = run?.id ?: -1L
+            val sections = if (rid > 0) {
+                com.camillanapoles.droidauditor.data.topology.TopologyBuilder(c.dataDao).build(rid)
+            } else {
+                emptyList()
+            }
+            _ui.value = _ui.value.copy(runId = rid, sections = sections, loaded = true)
+        }
+    }
+
+    fun setSort(sort: com.camillanapoles.droidauditor.domain.TopologySort) {
+        _ui.value = _ui.value.copy(sort = sort)
+    }
+
+    fun setQuery(query: String) {
+        _ui.value = _ui.value.copy(query = query)
+    }
+
+    fun setTypeFilter(filter: Int) {
+        _ui.value = _ui.value.copy(typeFilter = filter)
+    }
 }

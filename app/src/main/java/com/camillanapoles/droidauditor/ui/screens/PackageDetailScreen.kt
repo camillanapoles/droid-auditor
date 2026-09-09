@@ -211,7 +211,7 @@ private fun UsedByTree(
     runId: Long,
     onOpenPackage: (Long, String) -> Unit
 ) {
-    Column(modifier = Modifier.padding(start = (depth * 16).dp, vertical = 2.dp)) {
+    Column(modifier = Modifier.padding(start = (depth * 16).dp, top = 2.dp, bottom = 2.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
