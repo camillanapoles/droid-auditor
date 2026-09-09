@@ -146,6 +146,41 @@ data class PkgCount(val packageName: String, val count: Int)
 
 data class IdleCandidate(val packageName: String, val lastUpdateTime: Long)
 
+// ─────────── Topology ───────────
+
+/** App node in the categorical topology: priority (oom), impact, install order. */
+data class TopologyApp(
+    val packageName: String,
+    val isSystem: Boolean,
+    val category: String,
+    val priority: Int,          // -1 not running; 0 cached .. 5 persistent
+    val impactScore: Int,       // 0..100 composite
+    val rssKb: Long,
+    val cacheBytes: Long,
+    val dangerousPerms: Int,
+    val installOrder: Int,      // 1-based across all packages (ordem de surgimento)
+    val isRunning: Boolean,
+    val isCachedIdle: Boolean   // running without real activity
+)
+
+data class TopologyCategory(
+    val name: String,
+    val apps: List<TopologyApp>,
+    val totalRssKb: Long,
+    val totalCacheBytes: Long,
+    val maxImpact: Int
+)
+
+/** Top-level topology section: type [system/user]. */
+data class TopologyTypeSection(
+    val isSystem: Boolean,
+    val categories: List<TopologyCategory>,
+    val apps: List<TopologyApp>
+)
+
+/** Sort modes for the topology tree. */
+enum class TopologySort { IMPACT, PRIORITY, ORDER, NAME }
+
 object Kinds {
     const val SCRIPT = "script"
     const val SHELL = "shell"

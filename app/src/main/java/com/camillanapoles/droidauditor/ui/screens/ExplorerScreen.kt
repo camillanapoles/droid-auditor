@@ -62,6 +62,7 @@ fun ExplorerScreen(container: AppContainer, onOpenPackage: (Long, String) -> Uni
             stringResource(R.string.tab_packages),
             stringResource(R.string.tab_processes),
             stringResource(R.string.tab_services),
+            stringResource(R.string.tab_topology),
             stringResource(R.string.tab_findings)
         )
         TabRow(selectedTabIndex = tab) {
@@ -78,7 +79,8 @@ fun ExplorerScreen(container: AppContainer, onOpenPackage: (Long, String) -> Uni
             0 -> PackagesTab(packages, runId, query, includeSystem, { query = it }, { includeSystem = it }, onOpenPackage)
             1 -> ProcessesTab(processes)
             2 -> ServicesTab(services)
-            3 -> FindingsTab(findings, onOpenPackage)
+            3 -> TopologyTab(container, onOpenPackage)
+            4 -> FindingsTab(findings, onOpenPackage)
         }
     }
 }
