@@ -158,6 +158,8 @@ data class CrashEventRow(
     val command: String?,        // executable template (<pkg>), null = manual only
     val requiresRoot: Boolean,
     val rawPath: String?
+)
+
 /** Row of overlay_state: per-app overlay permission + active overlay windows. */
 data class OverlayStateRow(
     val packageName: String,

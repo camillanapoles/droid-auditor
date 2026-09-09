@@ -418,24 +418,6 @@ class DataDao(private val dbHelper: DbHelper) {
         return 0L
     }
 
-    /** Replaces the crash_events of one run in a single transaction. */
-    fun replaceCrashEvents(runId: Long, rows: List<com.camillanapoles.droidauditor.domain.CrashEventRow>) {
-        inTx { db ->
-            db.delete("crash_events", "run_id = ?", arrayOf(runId.toString()))
-            for (row in rows) {
-                val cv = ContentValues()
-                cv.put("run_id", runId)
-                cv.put("ts", row.ts)
-                cv.put("package_name", row.packageName)
-                cv.put("kind", row.kind)
-                cv.put("summary", row.summary)
-                cv.put("diagnosis_title", row.diagnosisTitle)
-                cv.put("cause", row.cause)
-                cv.put("resolution", row.resolution)
-                cv.put("command", row.command)
-                cv.put("requires_root", if (row.requiresRoot) 1 else 0)
-                cv.put("raw_path", row.rawPath)
-                db.insert("crash_events", null, cv)
     /** Replaces the overlay_state rows of one run in a single transaction. */
     fun replaceOverlayStates(
         runId: Long,
@@ -456,12 +438,6 @@ class DataDao(private val dbHelper: DbHelper) {
         }
     }
 
-    /** Latest-first crash events of a run. */
-    fun crashEventsFor(runId: Long, limit: Int = 200): List<com.camillanapoles.droidauditor.domain.CrashEventRow> {
-        val out = ArrayList<com.camillanapoles.droidauditor.domain.CrashEventRow>()
-        dbHelper.readableDatabase.rawQuery(
-            "SELECT ts, package_name, kind, summary, diagnosis_title, cause, resolution, command, requires_root, raw_path " +
-                "FROM crash_events WHERE run_id = ? ORDER BY ts DESC LIMIT $limit",
     /** Overlay rows of a run: allowed/active first, system last. */
     fun overlayRowsFor(runId: Long, limit: Int = 500): List<com.camillanapoles.droidauditor.domain.OverlayStateRow> {
         val out = ArrayList<com.camillanapoles.droidauditor.domain.OverlayStateRow>()
@@ -469,6 +445,51 @@ class DataDao(private val dbHelper: DbHelper) {
             "SELECT package_name, overlay_allowed, appops_mode, active_windows, is_system " +
                 "FROM overlay_state WHERE run_id = ? " +
                 "ORDER BY active_windows DESC, overlay_allowed DESC, package_name LIMIT $limit",
+            arrayOf(runId.toString())
+        ).use { c ->
+            while (c.moveToNext()) {
+                out.add(
+                    com.camillanapoles.droidauditor.domain.OverlayStateRow(
+                        packageName = c.getString(0) ?: continue,
+                        overlayAllowed = c.getInt(1) != 0,
+                        appopsMode = c.getString(2) ?: "",
+                        activeWindows = c.getInt(3),
+                        isSystem = c.getInt(4) != 0
+                    )
+                )
+            }
+        }
+        return out
+    }
+
+    /** Replaces the crash_events of one run in a single transaction. */
+    fun replaceCrashEvents(runId: Long, rows: List<com.camillanapoles.droidauditor.domain.CrashEventRow>) {
+        inTx { db ->
+            db.delete("crash_events", "run_id = ?", arrayOf(runId.toString()))
+            for (row in rows) {
+                val cv = ContentValues()
+                cv.put("run_id", runId)
+                cv.put("ts", row.ts)
+                cv.put("package_name", row.packageName)
+                cv.put("kind", row.kind)
+                cv.put("summary", row.summary)
+                cv.put("diagnosis_title", row.diagnosisTitle)
+                cv.put("cause", row.cause)
+                cv.put("resolution", row.resolution)
+                cv.put("command", row.command)
+                cv.put("requires_root", if (row.requiresRoot) 1 else 0)
+                cv.put("raw_path", row.rawPath)
+                db.insert("crash_events", null, cv)
+            }
+        }
+    }
+
+    /** Latest-first crash events of a run. */
+    fun crashEventsFor(runId: Long, limit: Int = 200): List<com.camillanapoles.droidauditor.domain.CrashEventRow> {
+        val out = ArrayList<com.camillanapoles.droidauditor.domain.CrashEventRow>()
+        dbHelper.readableDatabase.rawQuery(
+            "SELECT ts, package_name, kind, summary, diagnosis_title, cause, resolution, command, requires_root, raw_path " +
+                "FROM crash_events WHERE run_id = ? ORDER BY ts DESC LIMIT $limit",
             arrayOf(runId.toString())
         ).use { c ->
             while (c.moveToNext()) {
@@ -484,12 +505,6 @@ class DataDao(private val dbHelper: DbHelper) {
                         command = c.getString(7),
                         requiresRoot = c.getInt(8) != 0,
                         rawPath = c.getString(9)
-                    com.camillanapoles.droidauditor.domain.OverlayStateRow(
-                        packageName = c.getString(0) ?: continue,
-                        overlayAllowed = c.getInt(1) != 0,
-                        appopsMode = c.getString(2) ?: "",
-                        activeWindows = c.getInt(3),
-                        isSystem = c.getInt(4) != 0
                     )
                 )
             }

@@ -1133,13 +1133,6 @@
     "description": "Force stop a background package (<pkg> replaced from selected row)"
   },
   {
-    "name": "Crash diagnosis collector",
-    "category": "Internal Collectors",
-    "kind": "collector",
-    "command": "crash_diagnosis",
-    "description": "Crash/ANR events (logcat crash+events buffers) com diagnostico resolutivo"
-  },
-  {
     "name": "Overlay collector",
     "category": "Internal Collectors",
     "kind": "collector",
@@ -1156,5 +1149,12 @@
     "enabled": 1,
     "danger": 1,
     "description": "Revoga a permissao de sobreposicao do app selecionado (<pkg>)"
+  },
+  {
+    "name": "Crash diagnosis collector",
+    "category": "Internal Collectors",
+    "kind": "collector",
+    "command": "crash_diagnosis",
+    "description": "Crash/ANR events (logcat crash+events buffers) com diagnostico resolutivo"
   }
 ]
