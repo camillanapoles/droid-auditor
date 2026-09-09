@@ -6,11 +6,9 @@ import com.camillanapoles.droidauditor.data.collect.Collector
 import com.camillanapoles.droidauditor.data.collect.FocusCollector
 import com.camillanapoles.droidauditor.data.collect.LaunchGraphCollector
 import com.camillanapoles.droidauditor.data.collect.PackageCollector
+import com.camillanapoles.droidauditor.data.collect.OverlayCollector
 import com.camillanapoles.droidauditor.data.collect.PermissionCollector
 import com.camillanapoles.droidauditor.data.collect.ProcessCollector
-import com.camillanapoles.droidauditor.data.collect.ServiceCollector
-import com.camillanapoles.droidauditor.data.collect.StorageCachesCollector
-import com.camillanapoles.droidauditor.data.collect.TermuxStorageCollector
 import com.camillanapoles.droidauditor.data.collect.UsageCollector
 import com.camillanapoles.droidauditor.data.correlate.Correlator
 import com.camillanapoles.droidauditor.data.exec.ShellExec
@@ -57,7 +55,8 @@ class AuditEngine(private val container: AppContainer) {
         LaunchGraphCollector(container.shellExec, container.dataDao, container.settingsDao),
         UsageCollector(context, container.dataDao, container.settingsDao, container.findingsDao),
         StorageCachesCollector(container.rootAccess, container.shellExec, container.dataDao, container.findingsDao),
-        TermuxStorageCollector(container.rootAccess, container.shellExec, container.dataDao)
+        TermuxStorageCollector(container.rootAccess, container.shellExec, container.dataDao),
+        OverlayCollector(context, container.shellExec, container.rootAccess, container.dataDao, container.findingsDao)
     ).associateBy { it.id }
 
     val isRunning: Boolean

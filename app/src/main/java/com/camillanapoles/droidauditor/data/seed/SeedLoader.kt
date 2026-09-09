@@ -15,7 +15,10 @@ import org.json.JSONObject
 class SeedLoader(private val context: Context, private val dbHelper: DbHelper) {
 
     fun seedIfEmpty() {
-        if (countRows("commands") == 0L) seedCommands()
+        // commands rows are (re)seeded idempotently: the UNIQUE index on
+        // commands(name) + CONFLICT_IGNORE adds catalog entries shipped in
+        // newer asset versions without touching user edits on older installs.
+        seedCommands()
         if (countRows("relation_types") == 0L) seedRelations()
         seedSettings()
     }
@@ -49,7 +52,7 @@ class SeedLoader(private val context: Context, private val dbHelper: DbHelper) {
                 cv.put("description", o.optString("description", ""))
                 cv.put("source", "seed")
                 cv.put("updated_at", System.currentTimeMillis())
-                db.insert("commands", null, cv)
+                db.insertWithOnConflict("commands", null, cv, SQLiteDatabase.CONFLICT_IGNORE)
             }
             db.setTransactionSuccessful()
         } finally {

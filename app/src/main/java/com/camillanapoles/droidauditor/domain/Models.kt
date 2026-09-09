@@ -146,6 +146,15 @@ data class PkgCount(val packageName: String, val count: Int)
 
 data class IdleCandidate(val packageName: String, val lastUpdateTime: Long)
 
+/** Row of overlay_state: per-app overlay permission + active overlay windows. */
+data class OverlayStateRow(
+    val packageName: String,
+    val overlayAllowed: Boolean,
+    val appopsMode: String,
+    val activeWindows: Int,
+    val isSystem: Boolean
+)
+
 object Kinds {
     const val SCRIPT = "script"
     const val SHELL = "shell"
