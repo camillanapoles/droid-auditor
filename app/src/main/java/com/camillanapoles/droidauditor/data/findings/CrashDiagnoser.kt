@@ -68,7 +68,7 @@ object CrashDiagnoser {
                 severity = "MEDIUM"
             )
         },
-        Rule(Regex("java\\.lang\\.ClassNotFoundException|NoSuchMethodError|Resources\\$NotFoundException|InflateException")) {
+        Rule(Regex("java\\.lang\\.ClassNotFoundException|NoSuchMethodError|Resources\\\$NotFoundException|InflateException")) {
             Diagnosis(
                 title = "Instalacao/atualizacao incompleta ou incompativel",
                 cause = "Classe/recurso esperado nao existe no APK instalado — atualizacao parcial, APK antigo sobre dados novos ou dex corrompido.",
@@ -148,6 +148,8 @@ object CrashDiagnoser {
     )
 
     /** First matching diagnosis for a raw crash/ANR text block. */
-    fun diagnose(crashText: String): Diagnosis =
-        RULES.firstOrNull { it.pattern.containsMatchIn(crashText) }?.build() ?: FALLBACK
+    fun diagnose(crashText: String): Diagnosis {
+        val matched = RULES.firstOrNull { it.pattern.containsMatchIn(crashText) }
+        return matched?.build?.invoke() ?: FALLBACK
+    }
 }

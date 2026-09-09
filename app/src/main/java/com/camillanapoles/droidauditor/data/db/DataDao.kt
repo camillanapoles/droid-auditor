@@ -392,6 +392,22 @@ class DataDao(private val dbHelper: DbHelper) {
         return out
     }
 
+    /** Per-package cache/storage bytes (package-keyed rows only). */
+    fun cacheBytesByPackage(runId: Long): Map<String, Long> {
+        val map = HashMap<String, Long>()
+        dbHelper.readableDatabase.rawQuery(
+            "SELECT package_name, COALESCE(SUM(size_bytes), 0) FROM storage_entries " +
+                "WHERE run_id = ? AND package_name IS NOT NULL GROUP BY package_name",
+            arrayOf(runId.toString())
+        ).use { c ->
+            while (c.moveToNext()) {
+                val pkg = c.getString(0) ?: continue
+                map[pkg] = c.getLong(1)
+            }
+        }
+        return map
+    }
+
     fun termuxTotalBytes(runId: Long): Long {
         dbHelper.readableDatabase.rawQuery(
             "SELECT COALESCE(SUM(size_bytes), 0) FROM storage_entries WHERE run_id = ? AND category = 'termux'",

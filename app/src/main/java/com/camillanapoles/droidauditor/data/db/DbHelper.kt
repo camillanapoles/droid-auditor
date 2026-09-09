@@ -34,8 +34,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_V
     }
 
     companion object {
+        const val DB_NAME = "droidauditor.db"
         const val DB_VERSION = 2
-
         val ALL_TABLES = listOf(
             "settings", "commands", "audit_runs", "script_outputs", "packages",
             "permissions", "processes", "services", "activities", "launch_events",
