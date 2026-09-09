@@ -110,6 +110,23 @@
     <string name="overlay_allowed_badge">permitida</string>
     <string name="overlay_action_revoke">Revogar</string>
     <string name="overlay_revoke_confirm">Revogar a permissão de sobreposição de %1$s? O app para de poder desenhar sobre outros apps.</string>
+    <!-- Topology -->
+    <string name="tab_topology">Topologia</string>
+    <string name="topo_sort_impact">Impacto</string>
+    <string name="topo_sort_priority">Prioridade</string>
+    <string name="topo_sort_order">Ordem</string>
+    <string name="topo_sort_name">A-Z</string>
+    <string name="topo_type_all">Todos</string>
+    <string name="topo_type_user">Usuário</string>
+    <string name="topo_type_system">Sistema</string>
+    <string name="topo_search">Filtrar apps…</string>
+    <string name="topo_section_user">APLICATIVOS DO USUÁRIO</string>
+    <string name="topo_section_system">APLICATIVOS DO SISTEMA</string>
+    <string name="topo_apps_count">apps</string>
+    <string name="topo_impact">impacto</string>
+    <string name="topo_cache">cache</string>
+    <string name="topo_idle_badge">ocioso</string>
+    <string name="topo_dangerous_perms">perigosas</string>
     <string name="proc_pid">pid</string>
     <string name="proc_rss">RSS</string>
     <string name="proc_uid">uid</string>

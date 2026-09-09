@@ -9,6 +9,9 @@ import com.camillanapoles.droidauditor.data.collect.PackageCollector
 import com.camillanapoles.droidauditor.data.collect.OverlayCollector
 import com.camillanapoles.droidauditor.data.collect.PermissionCollector
 import com.camillanapoles.droidauditor.data.collect.ProcessCollector
+import com.camillanapoles.droidauditor.data.collect.ServiceCollector
+import com.camillanapoles.droidauditor.data.collect.StorageCachesCollector
+import com.camillanapoles.droidauditor.data.collect.TermuxStorageCollector
 import com.camillanapoles.droidauditor.data.collect.UsageCollector
 import com.camillanapoles.droidauditor.data.correlate.Correlator
 import com.camillanapoles.droidauditor.data.exec.ShellExec
