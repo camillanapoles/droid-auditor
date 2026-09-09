@@ -100,6 +100,16 @@
     <string name="usage_unknown">unknown</string>
     <string name="edges_out">outgoing</string>
     <string name="edges_in">incoming</string>
+
+    <!-- Crash diagnosis -->
+    <string name="tab_diagnosis">Diagnóstico</string>
+    <string name="crash_summary">%1$d crashes · %2$d ANRs</string>
+    <string name="crash_rescan">Reexaminar</string>
+    <string name="crash_none">Nenhum crash/ANR registrado. Root amplia a leitura para todos os apps.</string>
+    <string name="crash_fix_action">Corrigir</string>
+    <string name="crash_fix_confirm">Executar a correção para %1$s?</string>
+    <string name="crash_cause_label">Causa:</string>
+    <string name="crash_fix_label">Solução:</string>
     <string name="proc_pid">pid</string>
     <string name="proc_rss">RSS</string>
     <string name="proc_uid">uid</string>

@@ -402,6 +402,56 @@ class DataDao(private val dbHelper: DbHelper) {
         return 0L
     }
 
+    /** Replaces the crash_events of one run in a single transaction. */
+    fun replaceCrashEvents(runId: Long, rows: List<com.camillanapoles.droidauditor.domain.CrashEventRow>) {
+        inTx { db ->
+            db.delete("crash_events", "run_id = ?", arrayOf(runId.toString()))
+            for (row in rows) {
+                val cv = ContentValues()
+                cv.put("run_id", runId)
+                cv.put("ts", row.ts)
+                cv.put("package_name", row.packageName)
+                cv.put("kind", row.kind)
+                cv.put("summary", row.summary)
+                cv.put("diagnosis_title", row.diagnosisTitle)
+                cv.put("cause", row.cause)
+                cv.put("resolution", row.resolution)
+                cv.put("command", row.command)
+                cv.put("requires_root", if (row.requiresRoot) 1 else 0)
+                cv.put("raw_path", row.rawPath)
+                db.insert("crash_events", null, cv)
+            }
+        }
+    }
+
+    /** Latest-first crash events of a run. */
+    fun crashEventsFor(runId: Long, limit: Int = 200): List<com.camillanapoles.droidauditor.domain.CrashEventRow> {
+        val out = ArrayList<com.camillanapoles.droidauditor.domain.CrashEventRow>()
+        dbHelper.readableDatabase.rawQuery(
+            "SELECT ts, package_name, kind, summary, diagnosis_title, cause, resolution, command, requires_root, raw_path " +
+                "FROM crash_events WHERE run_id = ? ORDER BY ts DESC LIMIT $limit",
+            arrayOf(runId.toString())
+        ).use { c ->
+            while (c.moveToNext()) {
+                out.add(
+                    com.camillanapoles.droidauditor.domain.CrashEventRow(
+                        ts = c.getLong(0),
+                        packageName = c.getString(1) ?: continue,
+                        kind = c.getString(2) ?: "CRASH",
+                        summary = c.getString(3) ?: "",
+                        diagnosisTitle = c.getString(4) ?: "",
+                        cause = c.getString(5) ?: "",
+                        resolution = c.getString(6) ?: "",
+                        command = c.getString(7),
+                        requiresRoot = c.getInt(8) != 0,
+                        rawPath = c.getString(9)
+                    )
+                )
+            }
+        }
+        return out
+    }
+
     /** Non-system packages with a live process, no resumed activity and no services. */
     fun runningIdleCandidates(runId: Long): List<IdleCandidate> {
         val out = ArrayList<IdleCandidate>()

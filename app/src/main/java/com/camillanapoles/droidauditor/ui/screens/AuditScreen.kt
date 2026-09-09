@@ -101,7 +101,8 @@ fun AuditScreen(
         val tabs = listOf(
             stringResource(R.string.tab_progress),
             stringResource(R.string.tab_outputs),
-            stringResource(R.string.tab_findings)
+            stringResource(R.string.tab_findings),
+            stringResource(R.string.tab_diagnosis)
         )
         TabRow(selectedTabIndex = tab) {
             tabs.forEachIndexed { index, title ->
@@ -117,6 +118,7 @@ fun AuditScreen(
             0 -> ProgressTab(state)
             1 -> OutputsTab(outputs, onOpenOutput)
             2 -> FindingsTab(findings, severity, { severity = it }, onOpenPackage)
+            3 -> CrashTab(container, onOpenPackage)
         }
     }
 }

@@ -22,21 +22,25 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_V
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        for (table in ALL_TABLES) {
-            db.execSQL("DROP TABLE IF EXISTS $table")
+        // v1 -> v2 keeps collected data: crash_events is added with IF NOT EXISTS.
+        for (statement in DDL) {
+            db.execSQL(
+                statement
+                    .replaceFirst("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ")
+                    .replaceFirst("CREATE INDEX ", "CREATE INDEX IF NOT EXISTS ")
+            )
         }
-        onCreate(db)
+        db.execSQL("PRAGMA user_version = $DB_VERSION")
     }
 
     companion object {
-        const val DB_NAME = "droidauditor.db"
-        const val DB_VERSION = 1
+        const val DB_VERSION = 2
 
         val ALL_TABLES = listOf(
             "settings", "commands", "audit_runs", "script_outputs", "packages",
             "permissions", "processes", "services", "activities", "launch_events",
             "install_timeline", "usage_events", "storage_entries", "findings",
-            "entities", "edges", "relation_types"
+            "entities", "edges", "relation_types", "crash_events"
         )
 
         private val DDL: List<String> = listOf(
@@ -211,7 +215,22 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_V
             "CREATE INDEX idx_edges_run ON edges(run_id)",
             "CREATE INDEX idx_edges_src ON edges(src)",
             "CREATE INDEX idx_edges_dst ON edges(dst)",
-            "CREATE INDEX idx_edges_relation ON edges(relation)"
+            "CREATE INDEX idx_edges_relation ON edges(relation)",
+            "CREATE TABLE crash_events (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "run_id INTEGER, " +
+                "ts INTEGER, " +
+                "package_name TEXT, " +
+                "kind TEXT, " +
+                "summary TEXT, " +
+                "diagnosis_title TEXT, " +
+                "cause TEXT, " +
+                "resolution TEXT, " +
+                "command TEXT, " +
+                "requires_root INTEGER DEFAULT 0, " +
+                "raw_path TEXT)",
+            "CREATE INDEX idx_crash_run ON crash_events(run_id)",
+            "CREATE INDEX idx_crash_pkg ON crash_events(package_name)"
         )
     }
 }

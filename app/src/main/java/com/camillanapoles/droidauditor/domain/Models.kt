@@ -146,6 +146,20 @@ data class PkgCount(val packageName: String, val count: Int)
 
 data class IdleCandidate(val packageName: String, val lastUpdateTime: Long)
 
+/** Diagnosed crash/ANR event with a resolutive action. */
+data class CrashEventRow(
+    val ts: Long,
+    val packageName: String,
+    val kind: String,            // CRASH | ANR
+    val summary: String,
+    val diagnosisTitle: String,
+    val cause: String,
+    val resolution: String,
+    val command: String?,        // executable template (<pkg>), null = manual only
+    val requiresRoot: Boolean,
+    val rawPath: String?
+)
+
 object Kinds {
     const val SCRIPT = "script"
     const val SHELL = "shell"

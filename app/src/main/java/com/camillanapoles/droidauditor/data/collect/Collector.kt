@@ -15,6 +15,7 @@ object CollectorIds {
     const val USAGE = "usage_stats"
     const val STORAGE = "storage_caches"
     const val TERMUX = "termux_storage"
+    const val CRASH_DIAGNOSIS = "crash_diagnosis"
 }
 
 /** A built-in Kotlin collector invoked by the audit engine. */

@@ -41,7 +41,7 @@ class VmFactory(private val container: AppContainer) : ViewModelProvider.Factory
         ExplorerViewModel::class.java -> ExplorerViewModel(container)
         TimelineViewModel::class.java -> TimelineViewModel(container)
         OptimizeViewModel::class.java -> OptimizeViewModel(container)
-        CommandsViewModel::class.java -> CommandsViewModel(container)
+        CrashViewModel::class.java -> CrashViewModel(container)
         else -> throw IllegalArgumentException("Unknown ViewModel ${modelClass.name}")
     } as T
 }
@@ -395,4 +395,80 @@ class CommandsViewModel(private val c: AppContainer) : ViewModel() {
 
     private fun slug(name: String): String =
         name.lowercase().replace(Regex("[^a-z0-9_-]+"), "_").take(40)
+}
+
+class CrashViewModel(private val c: AppContainer) : ViewModel() {
+
+    data class UiState(
+        val runId: Long = -1L,
+        val events: List<com.camillanapoles.droidauditor.domain.CrashEventRow> = emptyList(),
+        val busy: Boolean = false,
+        val result: String? = null,
+        val loaded: Boolean = false
+    )
+
+    private val _ui = MutableStateFlow(UiState())
+    val ui: StateFlow<UiState> = _ui
+
+    init {
+        refresh()
+    }
+
+    fun refresh() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val run = c.runDao.lastRun()
+            _ui.value = _ui.value.copy(
+                runId = run?.id ?: -1L,
+                events = run?.let { c.dataDao.crashEventsFor(it.id) } ?: emptyList(),
+                loaded = true
+            )
+        }
+    }
+
+    /** Standalone re-scan attached to the latest run (no history pollution). */
+    fun rescan() {
+        if (_ui.value.busy) return
+        _ui.value = _ui.value.copy(busy = true)
+        viewModelScope.launch(Dispatchers.IO) {
+            val existing = c.runDao.lastRun()
+            val runId = existing?.id ?: c.runDao.insertRun(
+                c.rootAccess.isRootAvailable(),
+                android.os.Build.MODEL, android.os.Build.VERSION.RELEASE, android.os.Build.FINGERPRINT
+            )
+            val base = c.context.getExternalFilesDir(null) ?: c.context.filesDir
+            val runDir = File(base, "runs/run_$runId")
+            runDir.mkdirs()
+            try {
+                com.camillanapoles.droidauditor.data.collect.CrashCollector(
+                    c.shellExec, c.rootAccess, c.dataDao, c.findingsDao
+                ).collect(runId, runDir)
+                if (existing == null) c.runDao.finishRun(runId, 1, 0)
+            } catch (_: Exception) {
+                if (existing == null) c.runDao.finishRun(runId, 0, 1)
+            }
+            _ui.value = _ui.value.copy(
+                busy = false, runId = runId,
+                events = c.dataDao.crashEventsFor(runId), loaded = true
+            )
+        }
+    }
+
+    /** Runs the resolutive command of an event (root, danger-gated in UI). */
+    fun runResolution(ev: com.camillanapoles.droidauditor.domain.CrashEventRow) {
+        val cmd = ev.command ?: return
+        if (_ui.value.busy) return
+        _ui.value = _ui.value.copy(busy = true)
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = c.actionExecutor.runRaw(cmd, ev.requiresRoot, ev.packageName)
+            _ui.value = _ui.value.copy(
+                busy = false,
+                result = if (res.ok) "OK: ${ev.packageName}"
+                         else "exit ${res.exitCode}: ${res.output.take(300)}"
+            )
+        }
+    }
+
+    fun clearResult() {
+        _ui.value = _ui.value.copy(result = null)
+    }
 }
